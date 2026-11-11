@@ -6,34 +6,29 @@ HEADERS = {
     "User-Agent": "grupo3"
 }
 
-def get(endpoint, params=None): #pedido API
+def get(url, parametros=None): #pedido API
 
-    url = BASE_URL + endpoint.strip("/") + "/"
-
-    resposta = requests.get(url, params=params, headers=HEADERS)
+    resposta = requests.get(url, params=parametros, headers=HEADERS)
 
     if resposta.status_code == 200:
         return resposta.json()
 
-    elif resposta.status_code == 404:
-        raise RuntimeError("Recurso não encontrado: " + url)
-
     else:
-        raise RuntimeError("Erro na solicitação: " + str(resposta.status_code))
+        print(f"Erro no pedido: {resposta.status_code}")
+        return None
 
 
-def get_all(endpoint, params=None):
-
-    parametros = dict(params or {})
+def get_all(url, parametros):
     parametros["limit"] = 100
     parametros["offset"] = 0
 
     todos = []
 
     while True:
-        dados = get(endpoint, parametros)
+        dados = get(url, parametros)
+        if dados is None:
+            break
         todos.extend(dados["results"])
-
         parametros["offset"] += 100
 
         if parametros["offset"] >= dados["count"]:
