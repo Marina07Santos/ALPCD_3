@@ -1,24 +1,34 @@
+import json
+from pathlib import Path
 import requests
 
+cache_file = Path("cache.json")
+
+
 def get_exercicios(parametros):
-    parametros["limit"] = 100
-    parametros["offset"] = 0
+    if cache_file.exists(): #usa o cache que ja existe 
+        with cache_file.open(encoding="utf-8") as file:
+            cache = json.load(file)
+    else:
+        # Sem cache, consulta todas as páginas
+        parametros["limit"] = 100 # Sem cache, consulta todas as páginas
+        parametros["offset"] = 0
+        cache = {"total_count": 0, "results": []}
 
-    todos = []
-
-    while True:
-            pedido = requests.get("https://wger.de/api/v2/exerciseinfo/", params=parametros, headers={"User-Agent": "grupo3"})
-
-            if pedido.status_code == 200:
-                dados = pedido.json()
-                todos.extend(dados["results"])
-            else:
-                print("Erro no request:", pedido.status_code)
+        while parametros["offset"] < cache["total_count"] or parametros["offset"] == 0:
+            try:
+                response = requests.get("https://wger.de/api/v2/exerciseinfo/",params=parametros,headers={"User-Agent": "grupo3"})
+                response.raise_for_status()
+                page = response.json()
+                cache["total_count"] = page["count"]
+                cache["results"].extend(page["results"])
+                parametros["offset"] += parametros["limit"]
+            except requests.exceptions.RequestException as error:
+                print(f"Erro ao consultar a API: {error}")
                 break
 
-            if len(todos) >= dados["count"]:
-                break
-            else:
-                parametros["offset"] += 100
+        if cache["total_count"] > 0 and len(cache["results"]) >= cache["total_count"]:
+            with cache_file.open("w", encoding="utf-8") as file:
+                json.dump(cache, file, ensure_ascii=False, indent=2)
 
-    return todos
+    return cache["results"]
