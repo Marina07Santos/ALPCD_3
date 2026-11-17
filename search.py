@@ -48,7 +48,8 @@ def filtrar_exercicios(lista_exercicios, termo_ou_palavras, por_palavras=False):
                 "category": ex["category"]["name"], 
                 "equipment": equipamento
             }
-            res.append(limpo)
+            if nome != "":
+                res.append(limpo)
     return res
 
 def search_exercicios(termo, n):
