@@ -4,6 +4,7 @@ import typer
 from top import top_exercicios
 from equipment import contar_equipamento
 from tipo import get_tipo_por_id, get_treino
+from search import search_exercicios, exportar_para_csv
 
 app = typer.Typer()
 
@@ -27,6 +28,9 @@ def tipo_cmd(exercise_id: int):
 def workout(musculos: str, esforco: str, n: int):
     print(json.dumps(get_treino(musculos, esforco, n), indent=2))
 
+@app.command()
+def search(query: str, n: int):
+    print(json.dumps(search_exercicios(query, n), indent=2))
 
 if __name__ == "__main__":
     app()
