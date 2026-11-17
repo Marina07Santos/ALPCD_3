@@ -14,7 +14,7 @@ def get_ingles(dados):
             descricao = traducao["description"] or ""
 
             # limpar a descricao: tirar tags HTML e espacos a mais
-            descricao = re.sub(r"<.*?>", "", descricao)
+            descricao = re.sub(r"<.*?>", " ", descricao)
             descricao = re.sub(r"\s+", " ", descricao)
             descricao = re.sub(r"^ | $", "", descricao)
 
@@ -30,10 +30,12 @@ def get_classificacao(ex):
     n_musculos = len(ex["muscles"]) + len(ex["muscles_secondary"])
 
     nome = ""
+    texto = ""
     ingles = get_ingles(ex)
     if ingles != {}:
         nome = ingles["nome"].lower()
-    cardio = re.search(r"\b(run|jog|sprint|bike|cycling|burpee)", nome)
+        texto = nome + " " + ingles["descricao"].lower()
+    cardio = re.search(r"\b(run|jog|sprint|bike|cycling|burpee)", texto)
     isolado = re.search(r"\b(curl|extension|raise|fly|crunch|kickback)", nome)
     composto = re.search(r"\b(squat|deadlift|press|row|pull|chin|lunge|dip)", nome)
 
@@ -53,13 +55,24 @@ def get_classificacao(ex):
     return tipo
 
 
+
+def get_tipo_por_id(exercise_id):
+    exercicios = get_exercicios({"language": 2})
+
+    for ex in exercicios:
+        if ex["id"] == exercise_id:
+            return get_classificacao(ex)
+
+    print("O exercício não existe:", exercise_id)
+    return ""
+
+
 # fazer um plano de treinos
 def get_treino(musculos, esforco, n):
 
     treino = {}
     esforco = esforco.lower()
 
-    # separar os musculos pedidos e tirar os espacos das pontas
     res = re.split(",", musculos)
     for i, item in enumerate(res):
         res[i] = re.sub(r"^ | $", "", item).lower()
@@ -71,7 +84,10 @@ def get_treino(musculos, esforco, n):
 
         for ex in exercicios:
 
-            # nomes pelos quais o exercicio pode ser encontrado
+            if len(lista_exercicios) >= n:
+                break
+
+            
             lista_nomes = []
             lista_nomes.append(ex["category"]["name"].lower())
             for musculo in ex["muscles"]:
@@ -94,10 +110,6 @@ def get_treino(musculos, esforco, n):
                     dict_ex["equipment"] = equipamento
 
                     lista_exercicios.append(dict_ex)
-
-                    # ja temos exercicios suficientes para este musculo
-                    if len(lista_exercicios) == n:
-                        break
 
         if lista_exercicios == []:
             print("Sem exercicios para:", nome)
