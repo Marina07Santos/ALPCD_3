@@ -1,25 +1,31 @@
 import json
 import typer
+
 from top import top_exercicios
 from equipment import contar_equipamento
+from tipo import get_tipo_por_id, get_treino
 
 app = typer.Typer()
 
 
-@app.callback()
-def main():
-    pass
-
-
 @app.command()
 def top(n: int):
-    resultado = top_exercicios(n)
-    print(json.dumps(resultado, indent=2))
+    print(json.dumps(top_exercicios(n), indent=2))
+
 
 @app.command()
 def equipment(categoria: str):
-    resultado = contar_equipamento(categoria)
-    print(json.dumps(resultado, indent=2))
+    print(json.dumps(contar_equipamento(categoria), indent=2))
+
+
+@app.command("type")
+def tipo_cmd(exercise_id: int):
+    print(get_tipo_por_id(exercise_id))
+
+
+@app.command()
+def workout(musculos: str, esforco: str, n: int):
+    print(json.dumps(get_treino(musculos, esforco, n), indent=2))
 
 
 if __name__ == "__main__":
