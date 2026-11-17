@@ -6,7 +6,7 @@ def top_exercicios(n):
     exercicios = sorted(exercicios, key=lambda ex: ex["created"], reverse=True) #ordenar do mais recente para o mais antigo
 
     resultado = []
-    for ex in exercicios[:n]:
+    for ex in exercicios:
         if len(resultado) >= n:
             break
         nome = ""
