@@ -15,11 +15,11 @@ def top_exercicios(n):
                 nome = traducao["name"]
                 break
 
-    if nome != "":
-        equipamento = []
-        for equip in ex["equipment"]:
-            equipamento.append(equip["name"])
+        if nome != "":
+            equipamento = []
+            for equip in ex["equipment"]:
+                equipamento.append(equip["name"])
 
-        resultado.append({"name": nome, "category": ex["category"]["name"], "equipment": equipamento})
+            resultado.append({"name": nome, "category": ex["category"]["name"], "equipment": equipamento})
 
     return resultado
