@@ -7,12 +7,15 @@ def top_exercicios(n):
 
     resultado = []
     for ex in exercicios[:n]:
+        if len(resultado) >= n:
+            break
         nome = ""
         for traducao in ex["translations"]:
             if traducao["language"] == 2:
                 nome = traducao["name"]
                 break
 
+    if nome != "":
         equipamento = []
         for equip in ex["equipment"]:
             equipamento.append(equip["name"])
