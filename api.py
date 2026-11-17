@@ -10,8 +10,7 @@ def get_exercicios(parametros):
         with cache_file.open(encoding="utf-8") as file:
             cache = json.load(file)
     else:
-        # Sem cache, consulta todas as páginas
-        parametros["limit"] = 100 # Sem cache, consulta todas as páginas
+        parametros["limit"] = 100 # Sem cache, consulta todas as paginas
         parametros["offset"] = 0
         cache = {"total_count": 0, "results": []}
 
