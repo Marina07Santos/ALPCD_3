@@ -9,14 +9,13 @@ def contar_equipamento(categoria):
     contagem = {}
 
     for ex in exercicios:
-        # so os exercícios da categoria pedida
-        if ex["category"]["name"].lower() == categoria.lower():
+        if ex["category"]["name"].lower() == categoria.lower(): # so os exercicios da categoria pedida
 
-            # descricoo em ingles
+            # descricao em ingles
             texto = ""
             for traducao in ex["translations"]:
                 if traducao["language"] == 2:
-                    texto = traducao["description"]
+                    texto = traducao["description"] or ""
                     break
 
             texto = re.sub(r"<[^>]+>", " ", texto).lower()
@@ -30,7 +29,6 @@ def contar_equipamento(categoria):
                     else:
                         contagem[palavra] = vezes
 
-    # ordenar do maior para o menor
     ordenado = sorted(contagem.items(), key=lambda item: item[1], reverse=True)
 
     resultado = []
