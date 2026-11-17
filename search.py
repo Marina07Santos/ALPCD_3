@@ -35,7 +35,7 @@ def filtrar_exercicios(lista_exercicios, termo_ou_palavras, por_palavras=False):
                 if match_musculo:
                     break
         if match_categoria or match_musculo:
-            nome = ""
+            nome = "" 
             for traducao in ex["translations"]:
                 if traducao["language"] == 2:
                     nome = traducao["name"]
@@ -48,7 +48,8 @@ def filtrar_exercicios(lista_exercicios, termo_ou_palavras, por_palavras=False):
                 "category": ex["category"]["name"], 
                 "equipment": equipamento
             }
-            res.append(limpo)
+            if nome != "":
+                res.append(limpo)
     return res
 
 def search_exercicios(termo, n):
