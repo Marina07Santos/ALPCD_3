@@ -4,30 +4,42 @@ import requests
 
 cache_file = Path("cache.json")
 
-
 def get_exercicios(parametros):
-    if cache_file.exists(): #usa o cache que ja existe 
+    parametros_pedido = parametros.copy()  # Verificar se existe cache para estes parametros
+
+    if cache_file.exists(): 
         with cache_file.open(encoding="utf-8") as file:
             cache = json.load(file)
-    else:
-        parametros["limit"] = 100 # Sem cache, consulta todas as paginas
-        parametros["offset"] = 0
-        cache = {"total_count": 0, "results": []}
 
-        while parametros["offset"] < cache["total_count"] or parametros["offset"] == 0:
-            try:
-                response = requests.get("https://wger.de/api/v2/exerciseinfo/",params=parametros,headers={"User-Agent": "grupo3"})
-                response.raise_for_status()
-                page = response.json()
-                cache["total_count"] = page["count"]
-                cache["results"].extend(page["results"])
-                parametros["offset"] += parametros["limit"]
-            except requests.exceptions.RequestException as error:
-                print(f"Erro ao consultar a API: {error}")
-                break
+        if cache.get("parametros") == parametros:
+            return cache["results"]
 
-        if cache["total_count"] > 0 and len(cache["results"]) >= cache["total_count"]:
-            with cache_file.open("w", encoding="utf-8") as file:
-                json.dump(cache, file, ensure_ascii=False, indent=2)
+    parametros_pedido["limit"] = 100
+    parametros_pedido["offset"] = 0
+
+    cache = {"parametros": parametros.copy(), "total_count": 0 ,"results": []}
+
+    while parametros_pedido["offset"] < cache["total_count"] or parametros_pedido["offset"] == 0:     # Consultar todas as paginas
+        try:
+            response = requests.get("https://wger.de/api/v2/exerciseinfo/",
+                params=parametros_pedido,
+                headers={"User-Agent": "grupo3"}
+            )
+
+            response.raise_for_status()
+            pagina = response.json()
+
+            cache["total_count"] = pagina["count"]
+            cache["results"].extend(pagina["results"])
+
+            parametros_pedido["offset"] += parametros_pedido["limit"]
+
+        except requests.exceptions.RequestException as error:
+            raise RuntimeError(f"Erro ao consultar a API: {error}")
+
+    # Guardar os resultados na cache
+    if len(cache["results"]) >= cache["total_count"]:
+        with cache_file.open("w", encoding="utf-8") as file:
+            json.dump(cache, file, ensure_ascii=False, indent=2)
 
     return cache["results"]
