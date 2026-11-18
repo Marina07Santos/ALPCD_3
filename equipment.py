@@ -5,7 +5,7 @@ from api import get_exercicios
 def contar_equipamento(categoria):
     exercicios = get_exercicios({"language": 2})
 
-    palavras = ["barbell", "bench", "incline bench", "cable", "machine","dumbbell", "mat", "kettlebell", "pull-up", "band","sz-bar", "swiss ball", "bodyweight"]
+    palavras = ["barbell", "bench", "incline bench", "cable", "machine","dumbbell", "mat", "kettlebell", "pull-up", "band","sz-bar","bodyweight"]
     contagem = {}
 
     for ex in exercicios:
