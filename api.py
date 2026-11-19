@@ -5,13 +5,13 @@ import requests
 cache_file = Path("cache.json")
 
 def get_exercicios(parametros):
-    parametros_pedido = parametros.copy()  # Verificar se existe cache para estes parametros
+    parametros_pedido = parametros.copy()  # Criar uma copia dos parametros
 
-    if cache_file.exists(): 
+    if cache_file.exists(): # Verificar se existe cache para estes parametros
         with cache_file.open(encoding="utf-8") as file:
             cache = json.load(file)
 
-        if cache.get("parametros") == parametros:
+        if cache.get("parametros") == parametros_pedido:
             return cache["results"]
 
     parametros_pedido["limit"] = 100
@@ -35,7 +35,8 @@ def get_exercicios(parametros):
             parametros_pedido["offset"] += parametros_pedido["limit"]
 
         except requests.exceptions.RequestException as error:
-            raise RuntimeError(f"Erro ao consultar a API: {error}")
+            print(f"Erro ao consultar a API: {error}")
+            return []
 
     # Guardar os resultados na cache
     if len(cache["results"]) >= cache["total_count"]:
