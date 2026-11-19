@@ -36,10 +36,10 @@ def get_classificacao(ex):
         nome = ingles["nome"].lower()
         texto = nome + " " + ingles["descricao"].lower()
     cardio = re.search(r"\b(run|jog|sprint|bike|cycling|burpee)", texto)
-    isolado = re.search(r"\b(curl|extension|raise|fly|crunch|kickback)", nome)
-    composto = re.search(r"\b(squat|deadlift|press|row|pull|chin|lunge|dip)", nome)
+    isolado = re.search(r"\b(curl|extension|raise|fly|crunch|kickback)", texto)
+    composto = re.search(r"\b(squat|deadlift|press|row|pull|chin|lunge|dip)", texto)
 
-    if categoria == "Cardio" or cardio:
+    if categoria.lower() == "Cardio" or cardio:
         tipo = "cardio"
     elif isolado:
         tipo = "isolated"
@@ -88,28 +88,6 @@ def get_treino(musculos, esforco, n):
                 break
 
             
-            lista_nomes = []
-            lista_nomes.append(ex["category"]["name"].lower())
-            for musculo in ex["muscles"]:
-                lista_nomes.append(musculo["name_en"].lower())
-                lista_nomes.append(musculo["name"].lower())
-
-            dict_ingles = get_ingles(ex)
-
-            if nome in lista_nomes and dict_ingles != {}:
-                tipo = get_classificacao(ex)
-
-                if esforco == "any" or tipo == esforco:
-                    equipamento = []
-                    for equip in ex["equipment"]:
-                        equipamento.append(equip["name"])
-
-                    dict_ex = {}
-                    dict_ex["name"] = dict_ingles["nome"]
-                    dict_ex["type"] = tipo
-                    dict_ex["equipment"] = equipamento
-
-                    lista_exercicios.append(dict_ex)
 
         if lista_exercicios == []:
             print("Sem exercicios para:", nome)
