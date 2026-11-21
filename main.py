@@ -182,7 +182,7 @@ def get_classificacao(ex):
         nome = ingles["nome"].lower()
         texto = nome + " " + ingles["descricao"].lower()
     cardio = re.search(r"\b(run|jog|sprint|bike|cycling|burpee)", texto)
-    isolado = re.search(r"\b(curl|extension|raise|fly|crunch|kickback)", texto)
+    isolado = re.search(r"\b(curl|extension|raise|fly|crunch|kickback|adduction|abduction)", texto)
     composto = re.search(r"\b(squat|deadlift|press|row|pull|chin|lunge|dip)", texto)
 
     if categoria.lower() == "cardio" or cardio:
