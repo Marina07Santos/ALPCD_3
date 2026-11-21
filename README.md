@@ -4,10 +4,26 @@ grupo: Leonor, Luísa, Marina
 | Luísa Meneses | A113976 |
 | Marina Santos | A114844 |
 
+
 A  FitCli utilizou em python as seguintes bibliotecas `typer` e `requests` para consultar exercícios da API pública **wger** (`https://wger.de/api/v2/`).
 
 
-PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\AmbientesELinguagensDeProgramacaoParaCienciaDeDados\Projeto\ALPCD_3> python fitcli.py top 10            
+## Organização dos ficheiros
+| Ficheiro | Conteúdo |
+|----------|----------|
+| main.py | Lógica: pedidos à API, cache, filtros, classificação e contagens |
+| fitcli.py | Interface: comandos do typer, validação dos argumentos e saída em JSON/CSV |
+| requirements.txt | Bibliotecas externas (requests, typer) |
+| partes_individuais/ | Versões de cada elemento do grupo antes de juntarmos tudo no main.py (o programa não as usa) |
+
+
+## Instalação
+pip install -r requirements.txt
+
+
+
+## Exemplos do top
+python fitcli.py top 10            
 [
   {
     "name": "Single-Arm Backpack Row",
@@ -81,9 +97,9 @@ PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\Ambient
 
 
 
-
-
-PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\AmbientesELinguagensDeProgramacaoParaCienciaDeDados\Projeto\ALPCD_3> python fitcli.py search biceps 5
+## Exemplos do search
+### 1
+python fitcli.py search biceps 5
 [
   {
     "name": "Biceps Curls With Barbell",
@@ -123,13 +139,8 @@ PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\Ambient
 ]
 
 
-
-
-
-
-
-
-PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\AmbientesELinguagensDeProgramacaoParaCienciaDeDados\Projeto\ALPCD_3> python fitcli.py search legs 2  
+### 2
+python fitcli.py search legs 2  
 [
   {
     "name": "Seated Hip Adduction",
@@ -146,10 +157,8 @@ PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\Ambient
 ]
 
 
-
-
-
-PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\AmbientesELinguagensDeProgramacaoParaCienciaDeDados\Projeto\ALPCD_3> python fitcli.py search "abs back" 3
+### 3
+python fitcli.py search "abs back" 3
 [
   {
     "name": "2 Handed Kettlebell Swing",
@@ -175,10 +184,8 @@ PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\Ambient
 ]
 
 
-
-
-
-PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\AmbientesELinguagensDeProgramacaoParaCienciaDeDados\Projeto\ALPCD_3> python fitcli.py search bicep 2        
+### 4
+python fitcli.py search bicep 2        
 [
   {
     "name": "Biceps Curls With Barbell",
@@ -198,44 +205,31 @@ PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\Ambient
 
 
 
-
-
-
-
-
-
-
-
-PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\AmbientesELinguagensDeProgramacaoParaCienciaDeDados\Projeto\ALPCD_3> python fitcli.py type 999
+## Exemplos do type
+### 1
+python fitcli.py type 999
 compound
 
 
-
-
-
-
-PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\AmbientesELinguagensDeProgramacaoParaCienciaDeDados\Projeto\ALPCD_3> python fitcli.py type 688
+### 2
+python fitcli.py type 688
 isolated
 
 
-
-
-
-PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\AmbientesELinguagensDeProgramacaoParaCienciaDeDados\Projeto\ALPCD_3> python fitcli.py type 2761
+### 3
+python fitcli.py type 2761
 other
 
 
-
-
-
-PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\AmbientesELinguagensDeProgramacaoParaCienciaDeDados\Projeto\ALPCD_3> python fitcli.py type 2480
+### 4
+python fitcli.py type 2480
 cardio
 
 
 
-
-
-PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\AmbientesELinguagensDeProgramacaoParaCienciaDeDados\Projeto\ALPCD_3> python fitcli.py equipment chest  
+## Exemplos do equipment
+### 1
+python fitcli.py equipment chest  
 [
   {
     "bench": 37
@@ -261,15 +255,8 @@ PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\Ambient
 ]
 
 
-
-
-
-
-
-
-
-
-PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\AmbientesELinguagensDeProgramacaoParaCienciaDeDados\Projeto\ALPCD_3> python fitcli.py equipment abs    
+### 2
+python fitcli.py equipment abs    
 [
   {
     "dumbbell": 11
@@ -305,15 +292,9 @@ PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\Ambient
 
 
 
-
-
-
-
-
-
-
-
-PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\AmbientesELinguagensDeProgramacaoParaCienciaDeDados\Projeto\ALPCD_3> python fitcli.py workout biceps,back compound 5
+## Exemplos do workout
+### 1
+python fitcli.py workout biceps,back compound 5
 {
   "biceps": [
     {
@@ -391,17 +372,8 @@ PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\Ambient
 }
 
 
-
-
-
-
-
-
-
-
-
-
-PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\AmbientesELinguagensDeProgramacaoParaCienciaDeDados\Projeto\ALPCD_3> python fitcli.py workout biceps,back compound 5
+### 2
+python fitcli.py workout biceps,back compound 5
 {
   "biceps": [
     {
@@ -477,7 +449,10 @@ PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\Ambient
     }
   ]
 }
-PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\AmbientesELinguagensDeProgramacaoParaCienciaDeDados\Projeto\ALPCD_3> python fitcli.py workout biceps isolated 3     
+
+
+### 3
+python fitcli.py workout biceps isolated 3     
 {
   "biceps": [
     {
@@ -505,15 +480,8 @@ PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\Ambient
 }
 
 
-
-
-
-
-
-
-
-
-PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\AmbientesELinguagensDeProgramacaoParaCienciaDeDados\Projeto\ALPCD_3> python fitcli.py workout abs,legs any 3   
+### 4
+python fitcli.py workout abs,legs any 3   
 {
   "abs": [
     {
@@ -562,22 +530,8 @@ PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\Ambient
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\AmbientesELinguagensDeProgramacaoParaCienciaDeDados\Projeto\ALPCD_3> python fitcli.py workout bicep,xpto any 2
+### 5
+python fitcli.py workout bicep,xpto any 2
 Sem exercicios para: xpto
 {
   "bicep": [
@@ -600,16 +554,6 @@ Sem exercicios para: xpto
 }
 
 
-
-
-
-
-PS C:\Users\LMenezes\Desktop\LicenciaturaEmCienciaDeDados\2Ano\1Semestre\AmbientesELinguagensDeProgramacaoParaCienciaDeDados\Projeto\ALPCD_3> python fitcli.py workout chest,shoulders isolated 3 --csv treino.csv
+### 6
+python fitcli.py workout chest,shoulders isolated 3 --csv treino.csv
 Ficheiro exportado: treino.csv (6 registos)
-
-
-
-
-
-
-
