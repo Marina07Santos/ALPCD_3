@@ -3,6 +3,11 @@ import typer
 from main import top_exercicios, contar_equipamento, get_tipo_por_id, get_treino, search_exercicios, exportar_para_csv
 
 app = typer.Typer(help="CLI para consultar exercicios da API wger")
+# termina com erro se o termo for curto demais (ex: "a" apanha quase tudo)
+def validar_termo(termo):
+    if len(termo.strip()) < 3:
+        print("O termo tem de ter pelo menos 3 letras:", termo)
+        raise typer.Exit(1)
 
 # escreve o resultado em JSON (ensure_ascii=False para os acentos aparecerem bem)
 def mostrar_json(dados):
@@ -29,6 +34,7 @@ def top(n: int):
 def search(query: str, n: int):
     """Procura exercicios por musculo ou categoria (maximo N resultados)."""
     validar_n(n)
+    validar_termo(query)
     resultado = search_exercicios(query, n)
     if resultado == []:
         print("Sem exercicios para:", query)
@@ -50,6 +56,7 @@ def tipo_cmd(exercise_id: int):
 @app.command()
 def equipment(categoria: str):
     """Conta o equipamento mencionado nas descricoes de uma categoria."""
+    validar_termo(categoria)
     resultado = contar_equipamento(categoria)
     if resultado == []:
         print("Sem resultados para a categoria:", categoria)
@@ -81,6 +88,8 @@ def workout(
     """Gera um plano de treino: musculos/categorias separados por virgula, tipo de esforco e N por musculo."""
     esforco = esforco.lower()
     validar_n(n)
+    for musculo in musculos.split(","):
+        validar_termo(musculo)
 
     treino = get_treino(musculos, esforco, n)
 
