@@ -232,7 +232,7 @@ def contar_equipamento(categoria):
     contagem = {}
 
     for ex in exercicios:
-        if ex["category"]["name"].lower() == categoria.lower(): # so os exercicios da categoria pedida
+        if categoria.lower() in ex["category"]["name"].lower(): # so os exercicios da categoria pedida (como no search)
 
             # descricao em ingles (ja limpa pela get_ingles)
             ingles = get_ingles(ex)

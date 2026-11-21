@@ -87,6 +87,9 @@ def workout(
     csv: str = typer.Option(None, "--csv", help="Exportar o plano para um ficheiro CSV"),):
     """Gera um plano de treino: musculos/categorias separados por virgula, tipo de esforco e N por musculo."""
     esforco = esforco.lower()
+    if esforco != "compound" and esforco != "isolated" and esforco != "any":
+        print("O esforço tem de ser compound, isolated ou any.")
+        raise typer.Exit(1)
     validar_n(n)
     for musculo in musculos.split(","):
         validar_termo(musculo)
