@@ -170,6 +170,16 @@ def exportar_para_csv(exercicios, nome_ficheiro="treino.csv"):
 
 # type
 
+# procura palavras-chave num texto; devolve o tipo ou None se nao encontrar nenhuma
+def procurar_tipo(texto):
+    if re.search(r"\b(run|jog|sprint|bike|cycling|burpee|jumping jack)", texto):
+        return "cardio"
+    if re.search(r"\b(curl|hammercurl|extension|raise|fly|butterfly|cross-?over|crunch|kickback|adduction|abduction|calf press|pushdown|chin tuck)", texto):
+        return "isolated"
+    if re.search(r"\b(squat|deadlift|press|row|pull|chin|lunge|dip|snatch|thruster|power clean|ohp|rdl)", texto):
+        return "compound"
+    return None
+
 # diz se o exercicio e compound, isolated, cardio ou other
 def get_classificacao(ex):
     categoria = ex["category"]["name"]
@@ -180,23 +190,25 @@ def get_classificacao(ex):
     ingles = get_ingles(ex)
     if ingles != {}:
         nome = ingles["nome"].lower()
-        texto = nome + " " + ingles["descricao"].lower()
-    cardio = re.search(r"\b(run|jog|sprint|bike|cycling|burpee)", texto)
-    isolado = re.search(r"\b(curl|extension|raise|fly|crunch|kickback|adduction|abduction)", texto)
-    composto = re.search(r"\b(squat|deadlift|press|row|pull|chin|lunge|dip)", texto)
+        texto = ingles["descricao"].lower()
+    if re.search(r"\b(stretch|foam roll|breathing|meditation|balance|circles|yoga)", nome):  # alongamentos, mobilidade e respiracao nao sao exercicios de forca (so pelo nome)
+        return "other"
+    if categoria.lower() == "cardio":
+        return "cardio"
 
-    if categoria.lower() == "cardio" or cardio:
-        tipo = "cardio"
-    elif isolado:
-        tipo = "isolated"
-    elif composto:
-        tipo = "compound"
-    elif n_musculos >= 2:
-        tipo = "compound"
-    elif n_musculos == 1:
-        tipo = "isolated"
-    else:
-        tipo = "other"
+    # primeiro o nome, que e mais fiavel; so se nao decidir, a descricao
+    tipo = procurar_tipo(nome)
+    if tipo is None:
+        tipo = procurar_tipo(texto)
+
+    # se nao houver palavras-chave, decide pelo numero de musculos
+    if tipo is None:
+        if n_musculos >= 2:
+            tipo = "compound"
+        elif n_musculos == 1:
+            tipo = "isolated"
+        else:
+            tipo = "other"
 
     return tipo
 
