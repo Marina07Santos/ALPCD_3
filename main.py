@@ -30,7 +30,11 @@ def get_exercicios(parametros):
     total_count = 0
 
     # primeira pagina
-    resposta = requests.get(url, params=parametros_pedido, headers=headers)
+    try:
+        resposta = requests.get(url, params=parametros_pedido, headers=headers, timeout=10)
+    except requests.exceptions.RequestException as erro:
+        print("Erro de ligacao a API:", erro)
+        return []
     if resposta.status_code == 200:
         variavel = resposta.json()
         results.extend(variavel["results"])
@@ -41,7 +45,11 @@ def get_exercicios(parametros):
 
     # restantes paginas
     while parametros_pedido["offset"] < total_count:
-        resposta = requests.get(url, params=parametros_pedido, headers=headers)
+        try:
+            resposta = requests.get(url, params=parametros_pedido, headers=headers, timeout=10)
+        except requests.exceptions.RequestException as erro:
+            print("Erro de ligacao a API:", erro)
+            break
         if resposta.status_code == 200:
             variavel = resposta.json()
             results.extend(variavel["results"])
@@ -72,12 +80,19 @@ def get_ingles(dados):
             # limpar a descricao: tirar tags HTML e espacos a mais
             descricao = re.sub(r"<.*?>", " ", descricao)
             descricao = re.sub(r"\s+", " ", descricao)
-            descricao = re.sub(r"^ | $", "", descricao)
+            descricao = descricao.strip()
 
             dict_ingles["nome"] = nome
             dict_ingles["descricao"] = descricao
 
     return dict_ingles
+
+# lista com os nomes do equipamento de um exercicio
+def get_equipamento(ex):
+    equipamento = []
+    for equip in ex["equipment"]:
+        equipamento.append(equip["name"])
+    return equipamento
 
 #top
 def top_exercicios(n):
@@ -91,11 +106,7 @@ def top_exercicios(n):
 
         ingles = get_ingles(ex)
         if ingles != {}:
-            equipamento = []
-            for equip in ex["equipment"]:
-                equipamento.append(equip["name"])
-
-            resultado.append({"name": ingles["nome"], "category": ex["category"]["name"], "equipment": equipamento})
+            resultado.append({"name": ingles["nome"], "category": ex["category"]["name"], "equipment": get_equipamento(ex)})
 
     return resultado
 
@@ -106,8 +117,10 @@ def filtrar_exercicios(lista_exercicios, termo_ou_palavras, por_palavras=False):
         cat_name = ex["category"]["name"].lower()
         musculos_nomes = []
         for m in ex["muscles"]:
-            musculos_nomes.append(m["name"].lower())
-            musculos_nomes.append(m["name_en"].lower())
+            if m["name_en"] != "":
+                musculos_nomes.append(m["name_en"].lower())
+            else:
+                musculos_nomes.append(m["name"].lower())
         match_categoria = False
         match_musculo = False
         if not por_palavras:
@@ -132,11 +145,7 @@ def filtrar_exercicios(lista_exercicios, termo_ou_palavras, por_palavras=False):
         if match_categoria or match_musculo:
             ingles = get_ingles(ex)
             if ingles != {}:
-                equipamento = []
-                for equip in ex["equipment"]:
-                    equipamento.append(equip["name"])
-
-                res.append({"name": ingles["nome"], "category": ex["category"]["name"], "equipment": equipamento})
+                res.append({"name": ingles["nome"], "category": ex["category"]["name"], "equipment": get_equipamento(ex)})
     return res
 
 
@@ -147,15 +156,7 @@ def search_exercicios(termo, n):
     if len(resultado) == 0 and " " in termo_limpo:
         palavras = termo_limpo.split()
         resultado = filtrar_exercicios(exercicios, palavras, por_palavras=True)
-    resultado_final = []
-    contador = 0
-    for item in resultado:
-        if contador >= n:
-            break
-        resultado_final.append(item)
-        contador += 1
-    return resultado_final
-
+    return resultado[:n]
 
 def exportar_para_csv(exercicios, nome_ficheiro="treino.csv"):
     if not exercicios:
@@ -184,7 +185,7 @@ def get_classificacao(ex):
     isolado = re.search(r"\b(curl|extension|raise|fly|crunch|kickback)", texto)
     composto = re.search(r"\b(squat|deadlift|press|row|pull|chin|lunge|dip)", texto)
 
-    if categoria.lower() == "Cardio" or cardio:
+    if categoria.lower() == "cardio" or cardio:
         tipo = "cardio"
     elif isolado:
         tipo = "isolated"
@@ -226,14 +227,16 @@ def contar_equipamento(categoria):
             if ingles != {}:
                 texto = ingles["descricao"].lower()
 
-                # contar cada palavra de equipamento
-                for palavra in palavras:
-                    vezes = len(re.findall(rf"\b{palavra}s?\b", texto))
+                # contar primeiro as mais compridas ("incline bench" antes de "bench") e tira-las do texto, para nao serem contadas duas vezes
+                for palavra in sorted(palavras, key=len, reverse=True):
+                    padrao = rf"\b{palavra}(?:e?s)?\b"
+                    vezes = len(re.findall(padrao, texto))
                     if vezes > 0:
                         if palavra in contagem:
                             contagem[palavra] += vezes
                         else:
                             contagem[palavra] = vezes
+                        texto = re.sub(padrao, " ", texto)
 
     ordenado = sorted(contagem.items(), key=lambda item: item[1], reverse=True)
 
@@ -268,11 +271,7 @@ def get_treino(musculos, esforco, n):
                 tipo = get_classificacao(ex)
 
                 if esforco == "any" or tipo == esforco:
-                    equipamento = []
-                    for equip in ex["equipment"]:
-                        equipamento.append(equip["name"])
-
-                    lista_exercicios.append({"name": ingles["nome"], "type": tipo, "equipment": equipamento})
+                    lista_exercicios.append({"name": ingles["nome"], "type": tipo, "equipment": get_equipamento(ex)})
 
         if lista_exercicios == []:
             print("Sem exercicios para:", nome)
