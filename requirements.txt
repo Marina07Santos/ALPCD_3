@@ -1,0 +1,9 @@
+#Bibliotecas externas:
+pip install -r requirements
+
+#Bibliotecas internas:
+csv
+json
+re
+requests
+typer
