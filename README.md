@@ -1,6 +1,6 @@
 # ALPCD_3
 
-CLI em Python desenvolvida com `typer` e `requests` para consultar exercícios da API pública **wger** (`https://wger.de/api/v2/`), classificar esforço e gerar planos de treino.
+CLI em Python desenvolvida com `typer` e `requests` para consultar exercícios da API pública **wger** (`https://wger.de/api/v2/`), classificar o esforço e gerar planos de treino. Os resultados obtidos da API são guardados em `cache.json` quando os parâmetros correspondem, reduzindo pedidos repetidos. Para forçar uma nova consulta à API, basta remover o ficheiro `cache.json`. Os pedidos HTTP à API incluíam o cabeçalho `User-Agent` identificado por `grupo3`.
 
 
 
@@ -281,7 +281,7 @@ cardio
 
 
 ## Comando equipment
-Analisa as descrições dos exercícios de uma categoria e devolve a contagem ordenada de equipamentos.
+Analisa as descrições dos exercícios de uma categoria e devolve a contagem ordenada de equipamentos. A contagem considera formas no plural e avalia expressões compostas antes das simples (por exemplo, "incline bench" não é contado também como "bench").
 
 ### Exemplos do equipment
 #### Exemplo 1
@@ -357,7 +357,7 @@ python fitcli.py equipment abs
 
 
 ## Comando workout
-Gera um plano com até N exercícios por músculo/categoria separados por vírgula, filtrando por esforço (compound, isolated ou any), com exportação CSV opcional.
+Gera um plano com até N exercícios por músculo/categoria separados por vírgula, filtrando por esforço (compound, isolated ou any), com exportação CSV opcional. Passa os músculos/categorias separados por vírgula sem espaços (ex.: biceps,back) ou entre aspas caso inclua espaços.
 
 ### Exemplos do workout
 #### Exemplo 1
