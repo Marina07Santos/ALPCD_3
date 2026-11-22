@@ -1,11 +1,16 @@
 # ALPCD_3
-grupo: Leonor, Luísa, Marina
+
+CLI em Python desenvolvida com `typer` e `requests` para consultar exercícios da API pública **wger** (`https://wger.de/api/v2/`), classificar esforço e gerar planos de treino.
+
+
+
+## Grupo
+| Nome | Número |
+|------|--------|
 | Leonor Costa  | A113681 |
 | Luísa Meneses | A113976 |
 | Marina Santos | A114844 |
 
-
-A  FitCli utilizou em python as seguintes bibliotecas `typer` e `requests` para consultar exercícios da API pública **wger** (`https://wger.de/api/v2/`).
 
 
 ## Organização dos ficheiros
@@ -17,13 +22,22 @@ A  FitCli utilizou em python as seguintes bibliotecas `typer` e `requests` para 
 | partes_individuais/ | Versões de cada elemento do grupo antes de juntarmos tudo no main.py (o programa não as usa) |
 
 
+
 ## Instalação
+```bash
 pip install -r requirements.txt
+```
 
 
 
-## Exemplos do top
-python fitcli.py top 10            
+## Comando top
+Lista os N exercícios mais recentes com nome, categoria e equipamento.
+
+### Exemplo do top
+```bash
+python fitcli.py top 10
+```
+```json
 [
   {
     "name": "Single-Arm Backpack Row",
@@ -94,12 +108,19 @@ python fitcli.py top 10
     ]
   }
 ]
+```
 
 
 
-## Exemplos do search
-### 1
+## Comando search
+Procura exercícios correspondentes ao termo indicado (com suporte a correspondência parcial e múltiplas palavras).
+
+### Exemplos do search
+#### Exemplo 1
+```bash
 python fitcli.py search biceps 5
+```
+```json
 [
   {
     "name": "Biceps Curls With Barbell",
@@ -137,10 +158,14 @@ python fitcli.py search biceps 5
     ]
   }
 ]
+```
 
 
-### 2
-python fitcli.py search legs 2  
+#### Exemplo 2
+```bash
+python fitcli.py search legs 2
+```
+```json
 [
   {
     "name": "Seated Hip Adduction",
@@ -155,10 +180,14 @@ python fitcli.py search legs 2
     ]
   }
 ]
+```
 
 
-### 3
+#### Exemplo 3
+```bash
 python fitcli.py search "abs back" 3
+```
+```json
 [
   {
     "name": "2 Handed Kettlebell Swing",
@@ -182,10 +211,14 @@ python fitcli.py search "abs back" 3
     ]
   }
 ]
+```
 
 
-### 4
-python fitcli.py search bicep 2        
+#### Exemplo 4
+```bash
+python fitcli.py search bicep 2
+```
+```json
 [
   {
     "name": "Biceps Curls With Barbell",
@@ -202,34 +235,60 @@ python fitcli.py search bicep 2
     ]
   }
 ]
+```
 
 
 
-## Exemplos do type
-### 1
+## Comando type
+Classifica um exercício pelo seu ID (compound, isolated, cardio ou other).
+
+### Exemplos do type
+#### Exemplo 1
+```bash
 python fitcli.py type 999
+```
+```text
 compound
+```
 
 
-### 2
+#### Exemplo 2
+```bash
 python fitcli.py type 688
+```
+```text
 isolated
+```
 
 
-### 3
+#### Exemplo 3
+```bash
 python fitcli.py type 2761
+```
+```text
 other
+```
 
 
-### 4
+#### Exemplo 4
+```bash
 python fitcli.py type 2480
+```
+```text
 cardio
+```
 
 
 
-## Exemplos do equipment
-### 1
-python fitcli.py equipment chest  
+## Comando equipment
+Analisa as descrições dos exercícios de uma categoria e devolve a contagem ordenada de equipamentos.
+
+### Exemplos do equipment
+#### Exemplo 1
+```bash
+python fitcli.py equipment chest
+```
+```json
 [
   {
     "bench": 37
@@ -253,10 +312,14 @@ python fitcli.py equipment chest
     "barbell": 1
   }
 ]
+```
 
 
-### 2
-python fitcli.py equipment abs    
+#### Exemplo 2
+```bash
+python fitcli.py equipment abs
+```
+```json
 [
   {
     "dumbbell": 11
@@ -289,12 +352,19 @@ python fitcli.py equipment abs
     "bodyweight": 2
   }
 ]
+```
 
 
 
-## Exemplos do workout
-### 1
+## Comando workout
+Gera um plano com até N exercícios por músculo/categoria separados por vírgula, filtrando por esforço (compound, isolated ou any), com exportação CSV opcional.
+
+### Exemplos do workout
+#### Exemplo 1
+```bash
 python fitcli.py workout biceps,back compound 5
+```
+```json
 {
   "biceps": [
     {
@@ -370,89 +440,14 @@ python fitcli.py workout biceps,back compound 5
     }
   ]
 }
+```
 
 
-### 2
-python fitcli.py workout biceps,back compound 5
-{
-  "biceps": [
-    {
-      "name": "Chin Up",
-      "type": "compound",
-      "equipment": [
-        "Pull-up bar"
-      ]
-    },
-    {
-      "name": "Hercules Pillars",
-      "type": "compound",
-      "equipment": [
-        "Cable machine"
-      ]
-    },
-    {
-      "name": "Muscle up",
-      "type": "compound",
-      "equipment": [
-        "Pull-up bar"
-      ]
-    },
-    {
-      "name": "Wall Slides",
-      "type": "compound",
-      "equipment": [
-        "none (bodyweight exercise)"
-      ]
-    },
-    {
-      "name": "Pullup on fingerboard",
-      "type": "compound",
-      "equipment": [
-        "none (bodyweight exercise)"
-      ]
-    }
-  ],
-  "back": [
-    {
-      "name": "Bent Over Dumbbell Rows (Single Arm)",
-      "type": "compound",
-      "equipment": [
-        "Bench",
-        "Dumbbell"
-      ]
-    },
-    {
-      "name": "Bent Over Rowing",
-      "type": "compound",
-      "equipment": [
-        "Barbell"
-      ]
-    },
-    {
-      "name": "Bent Over Rowing Reverse",
-      "type": "compound",
-      "equipment": [
-        "Barbell"
-      ]
-    },
-    {
-      "name": "Chin Up",
-      "type": "compound",
-      "equipment": [
-        "Pull-up bar"
-      ]
-    },
-    {
-      "name": "Close-grip Lat Pull Down",
-      "type": "compound",
-      "equipment": []
-    }
-  ]
-}
-
-
-### 3
-python fitcli.py workout biceps isolated 3     
+#### Exemplo 2
+```bash
+python fitcli.py workout biceps isolated 3
+```
+```json
 {
   "biceps": [
     {
@@ -478,10 +473,14 @@ python fitcli.py workout biceps isolated 3
     }
   ]
 }
+```
 
 
-### 4
-python fitcli.py workout abs,legs any 3   
+#### Exemplo 3
+```bash
+python fitcli.py workout abs,legs any 3
+```
+```json
 {
   "abs": [
     {
@@ -528,11 +527,17 @@ python fitcli.py workout abs,legs any 3
     }
   ]
 }
+```
 
 
-### 5
+#### Exemplo 4
+```bash
 python fitcli.py workout bicep,xpto any 2
+```
+```text
 Sem exercicios para: xpto
+```
+```json
 {
   "bicep": [
     {
@@ -552,8 +557,13 @@ Sem exercicios para: xpto
   ],
   "xpto": []
 }
+```
 
 
-### 6
+#### Exemplo 5
+```bash
 python fitcli.py workout chest,shoulders isolated 3 --csv treino.csv
+```
+```text
 Ficheiro exportado: treino.csv (6 registos)
+```
