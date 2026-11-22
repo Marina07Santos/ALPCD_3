@@ -1,6 +1,6 @@
 # ALPCD_3
 
-CLI em Python desenvolvida com `typer` e `requests` para consultar exercícios da API pública **wger** (`https://wger.de/api/v2/`), classificar o esforço e gerar planos de treino. Os resultados obtidos da API são guardados em `cache.json` quando os parâmetros correspondem, reduzindo pedidos repetidos. Para forçar uma nova consulta à API, basta remover o ficheiro `cache.json`. Os pedidos HTTP à API incluíam o cabeçalho `User-Agent` identificado por `grupo3`.
+CLI em Python desenvolvida com `typer` e `requests` para consultar exercícios da API pública **wger** (`https://wger.de/api/v2/`), classificar o esforço e gerar planos de treino. Os exercícios são guardados em cache.json quando são descarregados todos com sucesso, e a cache só é usada se os parâmetros do pedido forem os mesmos. Para forçar uma nova consulta à API, basta remover o ficheiro `cache.json`. Os pedidos HTTP à API incluíam o cabeçalho `User-Agent` identificado por `grupo3`.
 
 
 
@@ -240,7 +240,15 @@ python fitcli.py search bicep 2
 
 
 ## Comando type
-Classifica um exercício pelo seu ID (compound, isolated, cardio ou other).
+Classifica um exercício pelo seu ID (compound, isolated, cardio ou other). A API não indica o tipo de esforço, por isso é inferido com expressões regulares, por esta ordem:
+1. *other* – o nome indica alongamento, mobilidade ou respiração (stretch, foam roll, breathing, balance, circles, yoga)
+2. *cardio* – o exercício está na categoria Cardio
+3. *palavras-chave*, procuradas primeiro no nome e, se o nome não decidir, na descrição:
+   - cardio: run, jog, sprint, bike, cycling, burpee, jumping jack
+   - isolated: curl, extension, raise, fly, butterfly, crunch, kickback, pushdown, adduction…
+   - compound: squat, deadlift, press, row, pull, lunge, dip, snatch, thruster…
+4. *número de músculos* – 2 ou mais → compound; 1 → isolated; nenhum → other
+O nome vem antes da descrição porque é mais fiável: num "Deficit Deadlift", a descrição fala em "hip extension", mas o exercício é composto.
 
 ### Exemplos do type
 #### Exemplo 1
