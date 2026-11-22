@@ -1,6 +1,6 @@
 # ALPCD_3
 
-CLI em Python desenvolvida com `typer` e `requests` para consultar exercícios da API pública **wger** (`https://wger.de/api/v2/`), classificar o esforço e gerar planos de treino. Os exercícios são guardados em cache.json quando são descarregados todos com sucesso, e a cache só é usada se os parâmetros do pedido forem os mesmos. Para forçar uma nova consulta à API, basta remover o ficheiro `cache.json`. Os pedidos HTTP à API incluíam o cabeçalho `User-Agent` identificado por `grupo3`.
+CLI em Python desenvolvida com `typer` e `requests` para consultar exercícios da API pública **wger** (`https://wger.de/api/v2/`), classificar o esforço e gerar planos de treino. Os exercícios são guardados em cache.json quando são descarregados todos com sucesso, e a cache só é usada se os parâmetros do pedido forem os mesmos. Para forçar uma nova consulta à API, basta remover o ficheiro `cache.json`. Os pedidos HTTP à API incluem o cabeçalho `User-Agent` identificado por `grupo3`.
 
 
 
